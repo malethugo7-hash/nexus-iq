@@ -479,7 +479,9 @@ export default function NexusIQ(){
                 <div style={{fontSize:24,marginBottom:12}}>🔒</div>
                 <div style={{fontSize:16,fontFamily:"'Playfair Display',serif",fontWeight:500,color:"#E2E0DB",marginBottom:8}}>{t.fullReport}</div>
                 <div style={{fontSize:12,color:"#7A786F",textAlign:"center",maxWidth:280,lineHeight:1.6,marginBottom:20}}>{t.fullReportDesc}</div>
-                <button onClick={()=>setPW(false)} style={{padding:"12px 28px",fontSize:13,fontWeight:500,background:"linear-gradient(135deg,#D4A843,#C49530)",color:"#08080C",borderRadius:6,letterSpacing:"1px",transition:"transform .2s"}}>{t.unlock}</button>
+ <a href="https://buy.stripe.com/eVqdR9a1a2U36asfcC63K00" target="_blank" rel="noopener noreferrer">
+<button style={{padding:"12px 28px",fontSize:13,fontWeight:500,background:"linear-gradient(135deg,#D4A843,#C49530)",color:"#08080C",borderRadius:6,letterSpacing:"1px",transition:"transform .2s"}}>{t.unlock}</button>
+</a>
                 <div style={{marginTop:16,textAlign:"center"}}>
                   <div style={{fontSize:11,color:"#4A4840",marginBottom:8}}>{t.emailAlt}</div>
                   {!emailOk?(<div style={{display:"flex",gap:8,justifyContent:"center"}}>
