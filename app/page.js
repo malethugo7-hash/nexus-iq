@@ -313,6 +313,21 @@ export default function NexusIQ(){
 
   useEffect(()=>{if(phase==="test"&&timeLeft===0&&!showFB&&q)doTimeout();},[timeLeft]);
 
+  useEffect(() => {
+  const params = new URLSearchParams(window.location.search);
+  const paid = params.get("paid");
+
+  if (paid === "1") {
+    const savedResult = localStorage.getItem("nexusiq_result");
+
+    if (savedResult) {
+      setIqResult(JSON.parse(savedResult));
+      setPW(false);
+      setPhase("results");
+    }
+  }
+}, []);
+
   const doTimeout=()=>{if(showFB)return;const nr={id:q.id,correct:false,time:q.timeLimit,timedOut:true};setResults(p=>[...p,nr]);setShowFB(true);nextR.current=setTimeout(()=>goNext([...results,nr]),1400);};
 
   const doSelect=(idx)=>{
@@ -323,9 +338,17 @@ export default function NexusIQ(){
   };
 
   const goNext=(cr)=>{
-    if(currentQ+1>=questions.length){setPhase("calculating");setTimeout(()=>{setIqResult(calcIQ(cr,questions));setPhase("results");},2200);}
-    else setCurrentQ(c=>c+1);
-  };
+  if(currentQ+1>=questions.length){
+    setPhase("calculating");
+    setTimeout(()=>{
+      const finalResult = calcIQ(cr,questions);
+      setIqResult(finalResult);
+      localStorage.setItem("nexusiq_result", JSON.stringify(finalResult));
+      setPhase("results");
+    },2200);
+  }
+  else setCurrentQ(c=>c+1);
+};
 
   const startTest=()=>{setQuestions(pickQs(BANKS[lang]));setCurrentQ(0);setResults([]);setIqResult(null);setPW(true);setEmailOk(false);setEmail("");setPhase("test");};
 
@@ -479,9 +502,7 @@ export default function NexusIQ(){
                 <div style={{fontSize:24,marginBottom:12}}>🔒</div>
                 <div style={{fontSize:16,fontFamily:"'Playfair Display',serif",fontWeight:500,color:"#E2E0DB",marginBottom:8}}>{t.fullReport}</div>
                 <div style={{fontSize:12,color:"#7A786F",textAlign:"center",maxWidth:280,lineHeight:1.6,marginBottom:20}}>{t.fullReportDesc}</div>
- <a href="https://buy.stripe.com/eVqdR9a1a2U36asfcC63K00" target="_blank" rel="noopener noreferrer">
-<button style={{padding:"12px 28px",fontSize:13,fontWeight:500,background:"linear-gradient(135deg,#D4A843,#C49530)",color:"#08080C",borderRadius:6,letterSpacing:"1px",transition:"transform .2s"}}>{t.unlock}</button>
-</a>
+ <button onClick={() => { window.location.href = "https://buy.stripe.com/eVqdR9a1a2U36asfcC63K00"; }} style={{padding:"12px 28px",fontSize:13,fontWeight:500,background:"linear-gradient(135deg,#D4A843,#C49530)",color:"#08080C",borderRadius:6,letterSpacing:"1px",transition:"transform .2s"}}>{t.unlock}</button>
                 <div style={{marginTop:16,textAlign:"center"}}>
                   <div style={{fontSize:11,color:"#4A4840",marginBottom:8}}>{t.emailAlt}</div>
                   {!emailOk?(<div style={{display:"flex",gap:8,justifyContent:"center"}}>
