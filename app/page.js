@@ -572,6 +572,26 @@ export default function NexusIQ() {
         weaknesses: finalResult.weaknesses,
         lang: lang || "es",
       },
+            result_full_json: {
+        estimate: finalResult.estimate,
+        lower: finalResult.lower,
+        upper: finalResult.upper,
+        raw_score: finalResult.rawScore,
+        percentile: pctl(finalResult.estimate),
+        avg_time: finalResult.avgTime,
+        total_correct: finalResult.totalCorrect,
+        total_questions: finalResult.totalQuestions,
+        domain_scores: finalResult.domainScores,
+        strengths: finalResult.strengths,
+        weaknesses: finalResult.weaknesses,
+        interpretation: {
+          percentile: pctl(finalResult.estimate),
+          fast_processing: finalResult.avgTime < 18,
+          top_strength: finalResult.strengths?.[0] || null,
+          top_weakness: finalResult.weaknesses?.[0] || null,
+        },
+        lang: lang || "es",
+      },
 
       // Full report stored before payment, unlocked after payment
       result_full_json: {
@@ -594,11 +614,12 @@ export default function NexusIQ() {
         },
         lang: lang || "es",
       },
-
-      // Metadata
+      
+            // Metadata
       lang: lang || "es",
       email: email || null,
       share_token: generatedShareToken,
+      report_token: generatedShareToken,
       paid: false,
 
       // Attribution / analytics
