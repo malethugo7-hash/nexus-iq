@@ -1642,26 +1642,28 @@ export default function NexusIQ() {
                           placeholder={t.emailPlaceholder}
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
-                          onKeyDown={(e) => {
+                          onKeyDown={async (e) => {
                             if (e.key === "Enter" && email.includes("@")) {
                               setEmailOk(true);
-                              if (shareToken) {console.log("SHARE TOKEN:", shareToken)
-console.log("SHARE TOKEN:", shareToken)
 
-const { data, error } = await supabase
-  .from("assessments")
-  .update({ email })
-  .eq("share_token", shareToken)
-  .select()
-  .single()
+                              if (shareToken) {
+                                console.log("SHARE TOKEN:", shareToken);
 
-if (error) {
-  console.error("Supabase error:", error)
-} else {
-  console.log("ASSESSMENT:", data)
-  console.log("ASSESSMENT ID:", data.id)
-}
-                            
+                                const { data, error } = await supabase
+                                  .from("assessments")
+                                  .update({ email })
+                                  .eq("share_token", shareToken)
+                                  .select()
+                                  .single();
+
+                                if (error) {
+                                  console.error("Supabase error:", error);
+                                } else {
+                                  console.log("ASSESSMENT:", data);
+                                  console.log("ASSESSMENT ID:", data?.id);
+                                }
+                              }
+                            }
                           }}
                           style={{
                             padding: "8px 14px",
