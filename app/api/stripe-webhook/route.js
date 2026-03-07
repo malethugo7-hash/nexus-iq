@@ -220,7 +220,7 @@ export async function POST(request) {
     const { data: assessments, error: fetchError } = await supabase
       .from("assessments")
       .select("*")
-      .eq("report_token", reportToken)
+      .eq("share_token", reportToken)
       .limit(1);
 
     if (fetchError) {
