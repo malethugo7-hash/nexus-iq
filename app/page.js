@@ -534,13 +534,15 @@ export default function NexusIQ() {
         ? crypto.randomUUID()
         : `share_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
 
+    const percentile = pctl(finalResult.estimate);
+
     const payload = {
       // Core scores
       iq_score: finalResult.estimate,
       iq_lower: finalResult.lower,
       iq_upper: finalResult.upper,
       raw_score: finalResult.rawScore,
-      percentile: pctl(finalResult.estimate),
+      percentile,
 
       // Timing & accuracy
       avg_time: finalResult.avgTime,
@@ -561,13 +563,35 @@ export default function NexusIQ() {
         lower: finalResult.lower,
         upper: finalResult.upper,
         raw_score: finalResult.rawScore,
-        percentile: pctl(finalResult.estimate),
+        percentile,
         avg_time: finalResult.avgTime,
         total_correct: finalResult.totalCorrect,
         total_questions: finalResult.totalQuestions,
         domain_scores: finalResult.domainScores,
         strengths: finalResult.strengths,
         weaknesses: finalResult.weaknesses,
+        lang: lang || "es",
+      },
+
+      // Full report stored before payment, unlocked after payment
+      result_full_json: {
+        estimate: finalResult.estimate,
+        lower: finalResult.lower,
+        upper: finalResult.upper,
+        raw_score: finalResult.rawScore,
+        percentile,
+        avg_time: finalResult.avgTime,
+        total_correct: finalResult.totalCorrect,
+        total_questions: finalResult.totalQuestions,
+        domain_scores: finalResult.domainScores,
+        strengths: finalResult.strengths,
+        weaknesses: finalResult.weaknesses,
+        interpretation: {
+          percentile,
+          fast_processing: finalResult.avgTime < 18,
+          top_strength: finalResult.strengths?.[0] || null,
+          top_weakness: finalResult.weaknesses?.[0] || null,
+        },
         lang: lang || "es",
       },
 
