@@ -555,6 +555,22 @@ export default function NexusIQ() {
       // Full answer detail (for deep analysis later)
       answers_json: finalAnswers,
 
+      // Required preview payload shown before purchase
+      result_preview_json: {
+        estimate: finalResult.estimate,
+        lower: finalResult.lower,
+        upper: finalResult.upper,
+        raw_score: finalResult.rawScore,
+        percentile: pctl(finalResult.estimate),
+        avg_time: finalResult.avgTime,
+        total_correct: finalResult.totalCorrect,
+        total_questions: finalResult.totalQuestions,
+        domain_scores: finalResult.domainScores,
+        strengths: finalResult.strengths,
+        weaknesses: finalResult.weaknesses,
+        lang: lang || "es",
+      },
+
       // Metadata
       lang: lang || "es",
       email: email || null,
@@ -1642,28 +1658,26 @@ export default function NexusIQ() {
                           placeholder={t.emailPlaceholder}
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
-                          onKeyDown={async (e) => {
+                          onKeyDown={(e) => {
                             if (e.key === "Enter" && email.includes("@")) {
                               setEmailOk(true);
+                              if (shareToken) {console.log("SHARE TOKEN:", shareToken)
+console.log("SHARE TOKEN:", shareToken)
 
-                              if (shareToken) {
-                                console.log("SHARE TOKEN:", shareToken);
+const { data, error } = await supabase
+  .from("assessments")
+  .update({ email })
+  .eq("share_token", shareToken)
+  .select()
+  .single()
 
-                                const { data, error } = await supabase
-                                  .from("assessments")
-                                  .update({ email })
-                                  .eq("share_token", shareToken)
-                                  .select()
-                                  .single();
-
-                                if (error) {
-                                  console.error("Supabase error:", error);
-                                } else {
-                                  console.log("ASSESSMENT:", data);
-                                  console.log("ASSESSMENT ID:", data?.id);
-                                }
-                              }
-                            }
+if (error) {
+  console.error("Supabase error:", error)
+} else {
+  console.log("ASSESSMENT:", data)
+  console.log("ASSESSMENT ID:", data.id)
+}
+                            
                           }}
                           style={{
                             padding: "8px 14px",
