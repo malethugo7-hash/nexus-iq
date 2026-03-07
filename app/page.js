@@ -1658,26 +1658,21 @@ export default function NexusIQ() {
                           placeholder={t.emailPlaceholder}
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
-                          onKeyDown={(e) => {
+                          onKeyDown={async (e) => {
                             if (e.key === "Enter" && email.includes("@")) {
                               setEmailOk(true);
-                              if (shareToken) {console.log("SHARE TOKEN:", shareToken)
-console.log("SHARE TOKEN:", shareToken)
 
-const { data, error } = await supabase
-  .from("assessments")
-  .update({ email })
-  .eq("share_token", shareToken)
-  .select()
-  .single()
+                              if (shareToken) {
+                                const { error } = await supabase
+                                  .from("assessments")
+                                  .update({ email })
+                                  .eq("share_token", shareToken);
 
-if (error) {
-  console.error("Supabase error:", error)
-} else {
-  console.log("ASSESSMENT:", data)
-  console.log("ASSESSMENT ID:", data.id)
-}
-                            
+                                if (error) {
+                                  console.error("[NexusIQ] Email update error:", error);
+                                }
+                              }
+                            }
                           }}
                           style={{
                             padding: "8px 14px",
@@ -1690,12 +1685,19 @@ if (error) {
                           }}
                         />
                         <button
-                          onClick={() => {
+                          onClick={async () => {
                             if (email.includes("@")) {
                               setEmailOk(true);
+
                               if (shareToken) {
-                                supabase.from("assessments").update({ email }).eq("share_token", shareToken)
-                                  .then(({ error }) => { if (error) console.error("[NexusIQ] Email update error:", error); });
+                                const { error } = await supabase
+                                  .from("assessments")
+                                  .update({ email })
+                                  .eq("share_token", shareToken);
+
+                                if (error) {
+                                  console.error("[NexusIQ] Email update error:", error);
+                                }
                               }
                             }
                           }}
